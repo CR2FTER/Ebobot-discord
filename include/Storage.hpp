@@ -7,7 +7,9 @@
 #include "Data.hpp"
 class Storage
 {
-	virtual std::optional<std::tuple<TimeSet, Data>> getUser(User, Group) = 0;
-	virtual std::vector<std::tuple<TimeSet, Data, User>> getAllUsersFromGroup(Group) = 0;
+public:
+	virtual std::optional<std::tuple<TimeSet, Data>> getUser(const User&, const Group&) = 0;
+	virtual std::vector<std::tuple<TimeSet, Data, User>> getAllUsersFromGroup(const Group&) = 0;
+	virtual void setValue(const User&, const Group&, const Data&) = 0;
 };
 

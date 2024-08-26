@@ -6,5 +6,6 @@ enum class ClassError
 };
 class Log
 {
+public:
 	virtual void logging(const std::string, ClassError) = 0;	
 };
