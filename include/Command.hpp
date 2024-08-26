@@ -3,4 +3,4 @@
 struct Command
 {
 	std::string command;
-}
+};

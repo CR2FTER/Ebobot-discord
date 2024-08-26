@@ -14,3 +14,7 @@ void DiscordBotStarter::Start()
 	});
 	bot.start(dpp::st_wait);
 }
+
+
+void DiscordBotStarter::SetController(const Controller& )
+{}
