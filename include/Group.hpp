@@ -3,4 +3,4 @@
 struct Group
 {
 	std::string Id;
-}
+};
