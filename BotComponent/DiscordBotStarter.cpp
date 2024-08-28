@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-void DiscordBotStarter::Start()
+void DiscordBotStarter::Start(Controller& controller)
 {
 	dpp::cluster bot("token", dpp::i_default_intents | dpp::i_message_content);
 	bot.on_log(dpp::utility::cout_logger());
@@ -16,5 +16,3 @@ void DiscordBotStarter::Start()
 }
 
 
-void DiscordBotStarter::SetController(const Controller& )
-{}

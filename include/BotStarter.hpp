@@ -1,9 +1,9 @@
 #pragma once
-
 #include "Controller.hpp"
+#include "Log.hpp"
+
 class BotStarter
 {
 public:
-	virtual void Start() = 0;
-	virtual void SetController(const Controller&) = 0;
+	virtual void Start(Controller&) = 0;
 };

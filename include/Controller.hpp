@@ -6,5 +6,6 @@
 
 class Controller
 {
+public:
 	virtual std::string Handle(const User&, const Group&, const Command&) = 0;
 };

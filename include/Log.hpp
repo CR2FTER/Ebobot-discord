@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <cstddef>
 
 enum class ClassError
 {
@@ -7,5 +9,7 @@ enum class ClassError
 class Log
 {
 public:
-	virtual void logging(const std::string, ClassError) = 0;	
+	virtual void Logging(const std::string&, ClassError) noexcept = 0;	
+protected:
+	bool GetStringClassError(char*,std::size_t, ClassError) const noexcept;
 };
