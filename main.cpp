@@ -4,9 +4,12 @@
 #include "Storage.hpp"
 #include "LogConsole.hpp" 
 #include "ControllerEbobot.hpp"
+#include <memory>
 int main()
 {
-	DiscordBotStarter dsbot;
+	std::shared_ptr<LogConsole> log;
+	DiscordBotStarter dsbot("", log);
+	
 	ControllerEbobot controller;	
 	BotStarter& bot = dsbot;
 	bot.Start(controller);
