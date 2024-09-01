@@ -7,7 +7,7 @@
 class DiscordBotStarter : public BotStarter
 {
 public:
-	DiscordBotStarter(const std::string&, std::shared_ptr<Log> logger);
+	DiscordBotStarter(const std::string&, const std::shared_ptr<Log>& logger);
 	void Start(Controller&) override;
 private:
 	std::string token_;

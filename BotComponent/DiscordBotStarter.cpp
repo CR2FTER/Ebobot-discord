@@ -4,7 +4,7 @@
 #include <cstddef>
 
 DiscordBotStarter::DiscordBotStarter(const std::string& str,
-		std::shared_ptr<Log> logger) : token_(str), logger_(logger)
+		const std::shared_ptr<Log>& logger) : token_(str), logger_(logger)
 {} 
 
 void DiscordBotStarter::Start(Controller& controller)

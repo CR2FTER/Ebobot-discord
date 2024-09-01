@@ -1,6 +1,6 @@
 #include "ControllerEbobot.hpp"
 
-ControllerEbobot::ControllerEbobot(std::shared_ptr<Storage> storage, std::shared_ptr<Log> log):
+ControllerEbobot::ControllerEbobot(const std::shared_ptr<Storage>& storage, const std::shared_ptr<Log>& log):
 	storage_(storage),log_(log)
 {}
 

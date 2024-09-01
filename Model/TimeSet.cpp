@@ -1,7 +1,8 @@
 #include "TimeSet.hpp"
-#include <ctime>
+#include <chrono>
 
-TimeSet::TimeSet() noexcept: time_(std::time(NULL))
+TimeSet::TimeSet() noexcept:
+	time_(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()))
 {}
 
 TimeSet::TimeSet(std::uint64_t time) noexcept: time_(time)
