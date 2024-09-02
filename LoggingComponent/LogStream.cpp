@@ -11,24 +11,45 @@ bool LogStream::createRecord_
      std::uint32_t nano, const char* message
      , std::size_t sizeMessage, ClassError classError) const noexcept
 {
-	if(count < 17 + sizeMessage)
-		return false;
 
-	count-=17 + sizeMessage;
-
-	std::size_t sizeTime = strftime(record, count, "{%F %T.", tp);
-	if(sizeTime == 0)
-		return false;
-
-	count -= sizeTime - 1;
-
-	for(std::uint8_t i = 9; i >= 1; i--)
 	{
-		std::uint8_t num = nano%10;
-		*(record+sizeTime+i-1) = num + 0x30;
-		nano/=10;
+		std::size_t i = 0;
+		for(; (*(message+i) != 0) && i < (sizeMessage ); i++)
+		{}
+		
+		sizeMessage = i;
 	}
-	sizeTime += 9;
+
+	count -= 18;
+	
+	
+	
+	std::size_t sizeTime = 0;
+	*(record+(sizeTime++)) = '{';
+	if(tp != nullptr){ //if have value 
+		std::size_t t = strftime(record+sizeTime, count, "%F %T.", tp);
+		if(t != 0)
+		{
+			sizeTime += t;
+			count -= t;
+		}
+		else
+			return false;
+	}
+	if (sizeTime == 1) //if it not changed (strftime return 0 or don`t have value)
+	{
+		std::memcpy(record+sizeTime, "TimeERROR",  9);
+	}
+	else{
+		for(std::uint8_t i = 9; i >= 1; i--) //.000000000}
+		{
+			std::uint8_t num = nano%10;
+			*(record+sizeTime+i-1) = num + 0x30;
+			nano/=10;
+		}
+	}
+	
+	sizeTime+=9;
 	*(record+(sizeTime++)) = '}';	
 	*(record+(sizeTime++)) = ' ';	
 	*(record+(sizeTime++)) = '[';	
@@ -37,13 +58,18 @@ bool LogStream::createRecord_
 	if(classSize == 0)
 		return false;
 
-	sizeTime += classSize -1;
-
+	sizeTime += classSize - 1;
+	count -= classSize - 1;
 	*(record+(sizeTime++)) = ']';
 	*(record+(sizeTime++)) = ':';	
 	*(record+(sizeTime++)) = ' ';
-	std::memcpy(record+sizeTime, message, sizeMessage);
-	sizeTime+= sizeMessage;
+	
+	std::size_t sizeCopy = (sizeMessage < count)? (sizeMessage): (count);
+
+	std::memcpy(record+sizeTime, message,
+			 	sizeCopy	
+			 	);
+	sizeTime+= sizeCopy;
 	*(record+(sizeTime++)) = '\n';
 	*(record+(sizeTime++)) = 0;
 	return true;
@@ -53,29 +79,47 @@ bool LogStream::createRecord_
 
 bool LogStream::Logging(const char* message, std::size_t count, ClassError classError) noexcept
 {
+	if(message == nullptr)
+		return false;
+	std::tm gTM;
+	std::tm* gTMptr = nullptr;
+	
+	std::uint64_t nanoSec = 0;
+	
 	std::chrono::system_clock::time_point tP = std::chrono::system_clock::now();
 	std::time_t timeSec = std::chrono::system_clock::to_time_t(tP);
-	std::chrono::duration<std::uint64_t, std::nano> dur = tP.time_since_epoch();
-	std::uint64_t nanoSec = (dur.count())%(std::nano::den);
 	
+	char arr[8192]; //buffer for a log record
+		
+		
 	try{
-		char arr[65000];
-		std::tm gTM;
+		std::chrono::duration<std::uint64_t, std::nano> dur = tP.time_since_epoch(); //can throw exception
+		nanoSec = (dur.count())%(std::nano::den);
 		{
 			std::lock_guard l(gmtimeLock_);
-			gTM = *std::gmtime(&timeSec);
+			std::tm* pTm = std::gmtime(&timeSec); //can return null
+			if(pTm != nullptr)
+			{
+				gTM = *pTm;
+				gTMptr = &gTM; //If ok, Set value
+			}
 		}
-		if(!createRecord_(arr, sizeof(arr), &gTM, nanoSec, message,  count, classError))
+	}
+	catch(...) //if throw, set null
+	{
+		gTMptr = nullptr;
+	}
+		
+	try{
+		if(!createRecord_(arr, sizeof(arr), gTMptr, nanoSec, message,  count, classError))
 			return false;
 
 		{
 			std::lock_guard l(mutex_);
-			errorStream_ << arr;
+			errorStream_ << arr; //can throw exception 
 			errorStream_.flush();
 		}
 
-
-		return true;
 	}
 	catch(const std::ios_base::failure& e)
 	{
@@ -91,6 +135,7 @@ bool LogStream::Logging(const char* message, std::size_t count, ClassError class
 		std::cerr << e.what() << std::endl;
 		std::quick_exit(-1);
 	}
+	return true;
 }
 
 LogStream::LogStream(std::streambuf* stream): errorStream_(stream)
