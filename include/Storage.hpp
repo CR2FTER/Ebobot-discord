@@ -14,5 +14,6 @@ public:
 	virtual void setValue(const User&, const Group&, const Data&) = 0;
 	virtual std::vector<std::tuple<Data, User>> getLimitTopUsersFromGroup(const Group&, std::size_t count) = 0;
 	virtual std::vector<std::tuple<Data, User, Group>> getLimitTopUsersFromAllGroup(std::size_t count) = 0;
+	virtual void flush() const noexcept = 0;
 };
 

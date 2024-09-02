@@ -23,7 +23,7 @@ void DiscordBotStarter::Start(Controller& controller)
 		else 
 			classError = ClassError::INFO;
 			
-		logger_->Logging(event.message, classError);		
+		logger_->Logging(event.message.c_str(), event.message.size(), classError);		
 	});
 
 	bot.on_slashcommand([&controller](const dpp::slashcommand_t & event) {

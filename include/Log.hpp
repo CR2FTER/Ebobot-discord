@@ -9,7 +9,7 @@ enum class ClassError
 class Log
 {
 public:
-	virtual void Logging(const std::string&, ClassError) noexcept = 0;	
+	virtual bool Logging(const char*, std::size_t, ClassError) noexcept = 0;	
 protected:
-	bool GetStringClassError(char*,std::size_t, ClassError) const noexcept;
+	std::size_t GetStringClassError(char*,std::size_t, ClassError) const noexcept;
 };

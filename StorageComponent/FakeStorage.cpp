@@ -27,3 +27,7 @@ std::vector<std::tuple<Data, User, Group>> FakeStorage::getLimitTopUsersFromAllG
 {
 	return {};
 }
+
+void FakeStorage::flush() const noexcept
+{
+}
