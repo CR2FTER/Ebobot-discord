@@ -26,14 +26,40 @@ void DiscordBotStarter::Start(Controller& controller)
 		logger_->Logging(event.message.c_str(), event.message.size(), classError);		
 	});
 
-	bot.on_slashcommand([&controller](const dpp::slashcommand_t & event) {
+	bot.on_slashcommand([&controller, this](const dpp::slashcommand_t & event) {
 		const dpp::user& dsUser = event.command.usr;	
-		User user{dsUser.username, dsUser.id.str()};
-		Group group{event.command.get_guild().id.str()};
-		Command command{event.command.get_command_name()};
-		event.reply(controller.Handle(user, group, command));
-	});	
-	bot.start(dpp::st_wait);
+		User user{std::move(dsUser.username), std::move(dsUser.id.str())};
+		Group group{std::move(event.command.get_guild().id.str())};
+		Command command{std::move(event.command.get_command_name())};
+		try {
+			std::optional<std::string> str = controller.Handle(user, group, command);
+			if(str.has_value())
+				event.reply(*str);
+		}
+		catch(std::bad_alloc& e)
+		{
+			logger_->Logging("BotStarter: Cannot allocate memory for reply", 41, ClassError::ERROR);
+		}
+		catch(std::exception& e)
+		{
+			const char* message = e.what();
+			logger_->Logging(message, std::strlen(message), ClassError::ERROR);
+		}
+	});
+
+	try
+	{
+		logger_->Logging("BotStarter: try to start a discord bot", 40, ClassError::INFO);
+		bot.start(dpp::st_wait);
+	}
+	catch(dpp::exception& e)	
+	{
+		const char* message = e.what();
+                logger_->Logging(message, std::strlen(message), ClassError::CRITICAL);
+		logger_->Logging("Try to restart", 100 , ClassError::INFO);
+		bot.start(dpp::st_wait);
+	}
+
 }
 
 

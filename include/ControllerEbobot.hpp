@@ -12,7 +12,7 @@ class ControllerEbobot : public Controller
 {
 public:
 	ControllerEbobot(const std::shared_ptr<Storage>&, const std::shared_ptr<Log>&);
-	std::string Handle(const User&, const Group&, const Command&) override;
+	std::optional<std::string> Handle(const User&, const Group&, const Command&) override;
 private:
 	std::shared_ptr<Storage> storage_;
 	std::shared_ptr<Log> log_;

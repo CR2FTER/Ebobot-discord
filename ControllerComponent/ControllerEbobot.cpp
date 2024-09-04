@@ -4,7 +4,13 @@ ControllerEbobot::ControllerEbobot(const std::shared_ptr<Storage>& storage, cons
 	storage_(storage),log_(log)
 {}
 
-std::string ControllerEbobot::Handle(const User& user, const Group& group, const Command& command)
+std::optional<std::string> ControllerEbobot::Handle(const User& user, const Group& group, const Command& command)
 {
-	return "Hello\n";
+	
+	if(command.command=="dick")
+	{}
+	else if (command.command=="start");
+	else if (command.command=="top");
+
+	return {};
 }

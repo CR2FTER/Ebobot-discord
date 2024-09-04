@@ -1,0 +1,15 @@
+{2024-09-03 18:22:57.737380402} [ERROR]: HTTP(S) error on https connection to discord.com:443: getaddrinfo error: Temporary failure in name resolution
+{2024-09-03 18:22:57.737723845} [INFO]: Cluster: 0 of 0 session starts remaining
+{2024-09-03 18:22:57.737742029} [CRITICAL]: Auto Shard: Cannot determine number of shards. Cluster startup aborted. Check your connection.
+{2024-09-03 18:34:24.640764839} [CRITICAL]: Invalid bot token (401: Unauthorized when getting gateway shard count)
+{2024-09-03 19:12:16.696865923} [CRITICAL]: Invalid bot token (401: Unauthorized when getting gateway shard count)
+{2024-09-03 19:13:25.236924339} [INFO]: BotStarter: try to start a discord bot!
+{2024-09-03 19:13:25.526098642} [CRITICAL]: Invalid bot token (401: Unauthorized when getting gateway shard count)
+{2024-09-03 19:23:28.184415368} [INFO]: BotStarter: try to start a discord bot!
+{2024-09-03 19:23:28.468969352} [CRITICAL]: Invalid bot token (401: Unauthorized when getting gateway shard count)
+{2024-09-03 19:41:30.895968414} [INFO]: BotStarter: try to start a discord bot!
+{2024-09-03 19:41:31.233154651} [CRITICAL]: Invalid bot token (401: Unauthorized when getting gateway shard count)
+{2024-09-03 19:41:47.152708560} [INFO]: BotStarter: try to start a discord bot
+{2024-09-03 19:41:47.509309002} [CRITICAL]: Invalid bot token (401: Unauthorized when getting gateway shard count)
+{2024-09-03 19:41:47.509356240} [INFO]: Try to restart
+{2024-09-03 19:41:48.855393536} [CRITICAL]: Invalid bot token (401: Unauthorized when getting gateway shard count)

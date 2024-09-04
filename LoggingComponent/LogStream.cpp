@@ -1,11 +1,10 @@
 #include "LogStream.hpp"
-#include "TimeSet.hpp"
 #include <type_traits>
 #include <exception>
 #include <iostream>
 #include <mutex>
-#include <iomanip>
 #include <cstring>
+
 bool LogStream::createRecord_
      (char* record, std::size_t count, const std::tm* tp,
      std::uint32_t nano, const char* message
@@ -123,24 +122,37 @@ bool LogStream::Logging(const char* message, std::size_t count, ClassError class
 	}
 	catch(const std::ios_base::failure& e)
 	{
+		std::lock_guard l(mutex_);
+		std::cerr.exceptions(std::ios_base::goodbit);
+		std::cerr.clear();
 		errorStream_.flush();
-		std::cerr << e.what() << std::endl;
+		std::cerr << arr << ' ' << e.what() << std::endl;
 		std::error_code system_code;
 		system_code.assign(e.code().value(), std::system_category());
 		std::quick_exit(system_code.value());
 	}
 	catch(const std::exception& e)
 	{
+		std::lock_guard l(mutex_);
+		std::cerr.exceptions(std::ios_base::goodbit);
+		std::cerr.clear();
 		errorStream_.flush();
-		std::cerr << e.what() << std::endl;
+		std::cerr << arr << ' ' << e.what() << std::endl;
+		std::quick_exit(-1);
+	}
+	catch(...)
+	{
+		std::lock_guard l(mutex_);
+		std::cerr.exceptions(std::ios_base::goodbit);
+                std::cerr.clear();
+		std::cerr << "Critical Error of Logger" << std::endl;
 		std::quick_exit(-1);
 	}
 	return true;
 }
 
-LogStream::LogStream(std::streambuf* stream): errorStream_(stream)
+LogStream::LogStream(std::ofstream&& stream): errorStream_(std::move(stream))
 {
-	Logging("Logger Created!", 15, ClassError::INFO);
 	errorStream_.exceptions(std::ios_base::badbit | std::ios_base::failbit);
 }
 
